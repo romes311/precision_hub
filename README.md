@@ -1,37 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Utah Precision Shooting Hub
 
-## Getting Started
+The **Utah Precision Shooting Hub** is a centralized platform for discovering and tracking NRL22, NRL22X, and precision rimfire/centerfire matches across Utah. It provides a modern, "Tactical Precision" themed interface for shooters to find clubs, view upcoming matches, and analyze detailed match results.
 
-First, run the development server:
+![Project Screenshot](https://github.com/romes311/precision_hub/raw/main/public/project-preview.png)
+
+## 🎯 Features
+
+-   **Club Directory**: Browse active precision shooting clubs in Utah with detailed profiles.
+-   **Match Calendar**: View upcoming and recent matches, filtered by date.
+-   **Match Results**: In-depth leaderboards for finished matches, including class/division breakdowns and rank highlights.
+-   **Tactical UI**: A custom dark-mode aesthetic featuring "Brand Red" accents and responsive design.
+-   **Data Synchronization**: Automated scripts to fetch and sync reliable data from external scoring APIs.
+
+## 🛠️ Tech Stack
+
+-   **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+-   **Language**: TypeScript
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom variable-based theme (OKLCH).
+-   **Components**: [shadcn/ui](https://ui.shadcn.com/) (Radix UI + Tailwind).
+-   **Icons**: Lucide React.
+-   **Date Handling**: Moment.js.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+-   Node.js 18+ installed.
+-   npm or yarn.
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/romes311/precision_hub.git
+    cd precision_hub
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+### Data Synchronization
+
+Before running the app, you need to populate the local data (clubs, matches, results). A helper script is provided:
+
+```bash
+npm run sync
+```
+
+This will:
+1.  Fetch active clubs in Utah.
+2.  Fetch upcoming and past matches.
+3.  Download full result sets for all matches.
+4.  Save everything to `src/data/` JSON files.
+
+### Running Development Server
+
+Start the local development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   `src/app`: Next.js App Router pages and layouts.
+-   `src/components`: Reusable UI components (ClubCard, MatchCard, Leaderboard, etc.).
+-   `src/lib`: Utility functions and API data accessors (`api.ts`).
+-   `src/types`: TypeScript interfaces for the data models.
+-   `scripts/sync-data.js`: Node.js script for fetching data from the Impact Scoring API.
+-   `data/`: Local JSON storage for app data (git-ignored components usually, but included here for prototype info).
 
-## Learn More
+## 🎨 Theme
 
-To learn more about Next.js, take a look at the following resources:
+The project uses a custom "Tactical" theme defined in `globals.css`:
+-   **Background**: Deep Dark (`#1a1a1a` / OKLCH variants).
+-   **Cards**: Gunmetal (`#1E1E1E`).
+-   **Primary Accent**: Brand Red (`#ea0a2a`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Deploy on Vercel
+## 📄 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# precision_hub
+This project is licensed under the MIT License.
