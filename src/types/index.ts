@@ -40,6 +40,8 @@ export interface Match {
   logoImage?: ImageAsset;
   clubLogoImage?: ImageAsset;
   creatorSocialIdentityId?: number;
+  source?: "IMPACT" | "PRS";
+  url?: string;
 }
 
 export interface Shooter {

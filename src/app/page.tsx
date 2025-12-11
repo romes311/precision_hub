@@ -3,14 +3,28 @@ import { ClubCard } from "@/components/ClubCard";
 import { MatchList } from "@/components/MatchList";
 import { Separator } from "@/components/ui/separator";
 
-export default async function Home() {
-  const clubs = await getClubs();
-  const matches = await getMatches();
+interface PageProps {
+  searchParams: Promise<{ source?: string }>;
+}
+
+export default async function Home(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const sourceFilter = searchParams.source || "IMPACT"; // Default to IMPACT
+
+  const allMatches = await getMatches();
+
+  // Filter based on source
+  const matches = allMatches.filter(m => m.source === sourceFilter);
 
   // Filter for upcoming matches only
-  const upcomingMatches = matches.filter(
-    (match) => new Date(match.startDate) >= new Date()
-  );
+  const upcomingMatches = matches
+    .filter((match) => new Date(match.startDate) >= new Date())
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+  const getTitle = () => {
+    if (sourceFilter === "PRS") return "PRS Series Matches";
+    return "NRL22 / Impact Matches";
+  }
 
   return (
     <main className="bg-background min-h-screen pb-20">
@@ -21,8 +35,7 @@ export default async function Home() {
             Utah Rifle Shooting Hub
           </h1>
           <p className="text-muted-foreground max-w-2xl text-xl md:text-2xl">
-            Your central source for verified NRL22 and precision rimfire clubs
-            and matches across Utah.
+            Your central source for verified NRL22 and precision rimfire matches across Utah.
           </p>
         </div>
       </div>
@@ -32,30 +45,10 @@ export default async function Home() {
         <div className="mb-12">
           <MatchList
             matches={upcomingMatches}
-            title="Upcoming Matches"
+            title={getTitle()}
             emptyMessage="No upcoming matches scheduled."
           />
         </div>
-
-        <Separator className="bg-border mb-12" />
-
-        {/* Clubs Section */}
-        <section className="bg-card border-border mb-12 rounded-xl border p-6 shadow-sm md:p-8">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-foreground text-2xl font-bold tracking-wide uppercase">
-              Featured Clubs
-            </h2>
-            <span className="text-primary-foreground bg-primary rounded-sm px-3 py-1 text-sm font-medium">
-              {clubs.length} Clubs Active
-            </span>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {clubs.map((club) => (
-              <ClubCard key={club.id} club={club} />
-            ))}
-          </div>
-        </section>
       </div>
     </main>
   );

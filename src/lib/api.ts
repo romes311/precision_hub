@@ -21,10 +21,25 @@ export async function getClubs(): Promise<Club[]> {
 }
 
 export async function getMatches(): Promise<Match[]> {
-  const data = await readJson<{ payload: { matchesListView: Match[] } }>(
+  const impactData = await readJson<{ payload: { matchesListView: Match[] } }>(
     "matches.json"
   );
-  return data?.payload.matchesListView || [];
+  const impactMatches = (impactData?.payload.matchesListView || []).map(m => ({
+    ...m,
+    source: "IMPACT" as const
+  }));
+
+  const prsMatches = await readJson<Match[]>("prs_matches.json");
+  const allPrsMatches = prsMatches || [];
+
+  // Combine and sort
+  const allMatches = [...impactMatches, ...allPrsMatches];
+
+  // Deduplicate based on name + date (basic check) if needed, but IDs are offset so they won't clash technically.
+  // Ideally, if a match is on both, we prefer one. 
+  // For now, let's just return all and see.
+
+  return allMatches.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
 }
 
 export async function getClubDetails(

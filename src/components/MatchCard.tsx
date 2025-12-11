@@ -25,9 +25,9 @@ export function MatchCard({ match }: MatchCardProps) {
     setIsMounted(true);
   }, [match.startDate]);
 
-  // Link to internal results page for all matches
+  // Link logic
   const resultLink = `/match/${match.id}/results`;
-  const registerLink = `https://www.impactscoring.net/match/register?id=${match.id}`;
+  const registerLink = match.url || `https://www.impactscoring.net/match/register?id=${match.id}`;
 
   const imageUrl =
     match.clubLogoImage?.previewUrl ||
