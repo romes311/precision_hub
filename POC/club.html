@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Club Details</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+      :root {
+        --primary: #0a3161;
+        --secondary: #b31942;
+        --bg: #f5f5f5;
+        --card-bg: #fff;
+        --text-main: #333;
+        --text-muted: #666;
+        --radius: 8px;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+      }
+
+      header {
+        background-color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+      }
+
+      .back-link {
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: 500;
+        margin-right: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .club-header {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+      }
+
+      .club-logo-large {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #f0f0f0;
+        flex-shrink: 0;
+      }
+
+      .club-info h1 {
+        margin: 0 0 0.5rem 0;
+        color: var(--primary);
+        font-size: 2rem;
+      }
+
+      .club-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .description {
+        color: #444;
+        max-width: 700px;
+        margin-bottom: 1.5rem;
+      }
+
+      .website-link {
+        display: inline-block;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.5rem;
+      }
+
+      .matches-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .match-card {
+        background: white;
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 5px solid var(--secondary);
+        transition: transform 0.2s;
+      }
+
+      .match-card:hover {
+        transform: translateX(5px);
+      }
+
+      .match-date {
+        font-weight: bold;
+        color: var(--secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+
+      .match-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 5px;
+      }
+
+      .match-location {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .match-type-badge {
+        background: #eee;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        color: #555;
+        margin-left: 10px;
+      }
+
+      .register-btn {
+        background: white;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .register-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .no-matches {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+        background: white;
+        border-radius: var(--radius);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="prototype.html" class="back-link">← Back to Hub</a>
+      <span style="color: #ccc">|</span>
+      <span style="margin-left: 20px; font-weight: 500">Club Profile</span>
+    </header>
+
+    <div class="container">
+      <div id="club-header-section" class="club-header">
+        <!-- Populated via JS -->
+      </div>
+
+      <div class="matches-section">
+        <h2 class="section-title">Upcoming Matches</h2>
+        <div id="matches-list" class="matches-list">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+
+    <script src="hobble_creek_full_data.js"></script>
+    <script>
+      function renderPage() {
+        if (typeof CLUB_FULL_DATA === "undefined") return;
+
+        const club = CLUB_FULL_DATA.payload.club;
+        const matches = CLUB_FULL_DATA.payload.matches || [];
+
+        // 1. Render Club Header
+        const headerContainer = document.getElementById("club-header-section");
+        const logoUrl =
+          club.logoImage?.previewUrl ||
+          `https://placehold.co/150x150?text=${club.name.charAt(0)}`;
+        const location = [club.city, club.state].filter(Boolean).join(", ");
+
+        headerContainer.innerHTML = `
+                <img src="${logoUrl}" alt="${club.name}" class="club-logo-large" onerror="this.onerror=null; this.src='https://placehold.co/150x150?text=${club.name.substring(0, 1)}'">
+                <div class="club-info">
+                    <h1>${club.name}</h1>
+                    <div class="club-meta">
+                        <div class="meta-item">📍 ${location}</div>
+                        ${club.contactEmail ? `<div class="meta-item">✉️ ${club.contactEmail}</div>` : ""}
+                    </div>
+                    <div class="description">
+                        ${club.about || "No description available."}
+                    </div>
+                    ${club.website ? `<a href="${club.website.startsWith("http") ? club.website : "https://" + club.website}" target="_blank" class="website-link">Visit Website</a>` : ""}
+                </div>
+            `;
+
+        // 2. Render Matches
+        const matchesContainer = document.getElementById("matches-list");
+
+        if (matches.length === 0) {
+          matchesContainer.innerHTML =
+            '<div class="no-matches">No matches found for this club.</div>';
+        } else {
+          matchesContainer.innerHTML = matches
+            .map((match) => {
+              const date = moment(match.startDate);
+              const dateStr = date.format("MMM D, YYYY @ h:mm A");
+
+              // Simple check for past matches to style them differently if needed
+              const isPast = date.isBefore(moment());
+
+              return `
+                        <div class="match-card" style="${isPast ? "border-left-color: #ccc; opacity: 0.8;" : ""}">
+                            <div>
+                                <div class="match-date">${dateStr} ${isPast ? "(Finished)" : ""}</div>
+                                <div class="match-name">
+                                    ${match.name}
+                                    <span class="match-type-badge">${match.matchTypeReadableName}</span>
+                                </div>
+                                <div class="match-location">📍 ${match.city}, ${match.state}</div>
+                            </div>
+                            <a href="${match.id === 1445 ? "results.html" : "https://www.impactscoring.net/match/register?id=" + match.id}" target="${match.id === 1445 ? "_self" : "_blank"}" class="register-btn">
+                                ${isPast ? "View Results" : "Register / Details"}
+                            </a>
+                        </div>
+                    `;
+            })
+            .join("");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", renderPage);
+    </script>
+  </body>
+</html>

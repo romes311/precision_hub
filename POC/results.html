@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match Results</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+      :root {
+        --primary: #0a3161;
+        --secondary: #b31942;
+        --bg: #f5f5f5;
+        --card-bg: #fff;
+        --text-main: #333;
+        --text-muted: #666;
+        --radius: 8px;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+      }
+
+      header {
+        background-color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+      }
+
+      .back-link {
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: 500;
+        margin-right: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .match-header {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .match-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: var(--secondary);
+      }
+
+      .match-title {
+        margin: 0 0 0.5rem 0;
+        color: var(--primary);
+        font-size: 2rem;
+      }
+
+      .match-meta {
+        color: var(--text-muted);
+        display: flex;
+        gap: 1.5rem;
+        font-size: 1rem;
+      }
+
+      .results-table-container {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background: #f9f9f9;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .rank-cell {
+        font-weight: bold;
+        color: var(--secondary);
+        width: 50px;
+        text-align: center;
+      }
+
+      .shooter-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+      }
+
+      .shooter-img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #eee;
+        object-fit: cover;
+      }
+
+      .division-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        background: #eef;
+        color: var(--text-main);
+        font-size: 0.85rem;
+      }
+
+      .class-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        color: white;
+        font-weight: 500;
+      }
+
+      .points-cell {
+        font-weight: bold;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+
+      .rank-1 {
+        background-color: rgba(255, 215, 0, 0.1);
+      }
+
+      .rank-2 {
+        background-color: rgba(192, 192, 192, 0.1);
+      }
+
+      .rank-3 {
+        background-color: rgba(205, 127, 50, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="club.html" class="back-link">← Back to Club</a>
+      <span style="color: #ccc">|</span>
+      <span style="margin-left: 20px; font-weight: 500">Match Results</span>
+    </header>
+
+    <div class="container">
+      <div id="match-header" class="match-header">
+        <!-- Populated via JS -->
+      </div>
+
+      <div class="results-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align: center">Rank</th>
+              <th>Shooter</th>
+              <th>Division</th>
+              <th>Class</th>
+              <th>Total Points</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="match_1445_full_data.js"></script>
+    <script>
+      function renderPage() {
+        if (typeof MATCH_1445_DATA === "undefined") return;
+
+        const payload = MATCH_1445_DATA.payload;
+        const match = payload.match;
+        const shooters = payload.shooters || [];
+        const divisions = payload.divisions || [];
+        const classifications = payload.classifications || [];
+
+        // Helper to get names
+        const getDivisionName = (id) =>
+          divisions.find((d) => d.id === id)?.name || "-";
+        const getClassName = (id) =>
+          classifications.find((c) => c.id === id)?.name || "-";
+        const getClassColor = (id) =>
+          classifications.find((c) => c.id === id)?.hexColor || "888888";
+
+        // 1. Header
+        const headerContainer = document.getElementById("match-header");
+        const date = moment(match.startDate);
+
+        headerContainer.innerHTML = `
+                <h1 class="match-title">${match.name}</h1>
+                <div class="match-meta">
+                    <div>📅 ${date.format("MMMM D, YYYY")}</div>
+                    <div>📍 ${match.city}, ${match.state}</div>
+                    <div>👥 ${shooters.length} Shooters</div>
+                </div>
+            `;
+
+        // 2. Leaderboard
+        const tbody = document.getElementById("results-body");
+
+        // Sort by rank just in case
+        shooters.sort((a, b) => a.rank - b.rank);
+
+        tbody.innerHTML = shooters
+          .map((shooter) => {
+            const img =
+              shooter.profileImage?.thumbnailUrl ||
+              `https://placehold.co/32x32?text=${shooter.firstName.charAt(0)}`;
+            const rowClass = shooter.rank <= 3 ? `rank-${shooter.rank}` : "";
+
+            return `
+                    <tr class="${rowClass}">
+                        <td class="rank-cell">#${shooter.rank}</td>
+                        <td>
+                            <div class="shooter-cell">
+                                <img src="${img}" class="shooter-img" onerror="this.onerror=null; this.src='https://placehold.co/32x32?text=${shooter.firstName.charAt(0)}'">
+                                <div>
+                                    <div>${shooter.firstName} ${shooter.lastName}</div>
+                                    <div style="font-size: 0.8rem; color: #888;">${shooter.handleName || ""}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="division-badge">${getDivisionName(shooter.divisionId)}</span>
+                        </td>
+                        <td>
+                            <span class="class-badge" style="background-color: #${getClassColor(shooter.classificationId)};">
+                                ${getClassName(shooter.classificationId)}
+                            </span>
+                        </td>
+                        <td class="points-cell">${shooter.points.toLocaleString()}</td>
+                    </tr>
+                `;
+          })
+          .join("");
+      }
+
+      document.addEventListener("DOMContentLoaded", renderPage);
+    </script>
+  </body>
+</html>
