@@ -33,12 +33,21 @@ export default async function Home() {
 
   return (
     <main className="bg-background min-h-screen pb-20">
-      <div className="bg-card border-border text-card-foreground border-b pt-24 pb-16">
-        <div className="container mx-auto max-w-6xl px-4">
-          <h1 className="text-primary mb-4 text-4xl font-extrabold tracking-tight uppercase md:text-5xl">
+      <div className="relative border-b pt-32 pb-24 border-border overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/hero.jpg')" }}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
+
+        <div className="container relative z-10 mx-auto max-w-6xl px-4">
+          <h1 className="text-white mb-4 text-4xl font-extrabold tracking-tight uppercase md:text-6xl drop-shadow-md">
             Utah Rifle Shooting Hub
           </h1>
-          <p className="text-muted-foreground max-w-2xl text-xl md:text-2xl">
+          <p className="text-gray-200 max-w-2xl text-xl md:text-2xl drop-shadow-sm font-medium">
             The central calendar for verified precision rifle matches across
             Utah.
           </p>
