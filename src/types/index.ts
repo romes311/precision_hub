@@ -22,6 +22,7 @@ export interface Club {
   longitude?: number;
   slug?: string;
   creatorSocialIdentityId?: number;
+  source?: "IMPACT" | "PRS" | "NRL_HUNTER" | "GAS_GUN";
 }
 
 export interface Match {
@@ -40,7 +41,7 @@ export interface Match {
   logoImage?: ImageAsset;
   clubLogoImage?: ImageAsset;
   creatorSocialIdentityId?: number;
-  source?: "IMPACT" | "PRS";
+  source?: "IMPACT" | "PRS" | "NRL_HUNTER" | "GAS_GUN";
   url?: string;
 }
 

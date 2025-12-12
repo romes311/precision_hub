@@ -19,18 +19,32 @@ export function ClubCard({ club }: ClubCardProps) {
     `https://placehold.co/400x200?text=${club.name.charAt(0)}`;
 
   return (
-    <Card className="bg-card border-border overflow-hidden border shadow-sm transition-shadow hover:shadow-lg">
+    <Card className="bg-card border-border gap-0 overflow-hidden border p-0 shadow-sm transition-shadow hover:shadow-lg">
       <div className="bg-muted relative h-48 w-full">
-        <img
-          src={logoUrl}
-          alt={club.name}
-          className="h-full w-full object-cover"
-          loading="lazy"
-          // Very basic fallback via JS in img tag isn't ideal in React, handled by onError usually.
-          // For now, relying on the previewUrl being mostly good or the placeholder above.
-        />
+        {club.source === "NRL_HUNTER" && club.website ? (
+          <a
+            href={club.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block h-full w-full"
+          >
+            <img
+              src={logoUrl}
+              alt={club.name}
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </a>
+        ) : (
+          <img
+            src={logoUrl}
+            alt={club.name}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        )}
       </div>
-      <CardHeader className="pb-2">
+      <CardHeader className="px-6 pt-6 pb-2">
         <h3
           className="text-card-foreground line-clamp-1 text-xl font-bold tracking-wide uppercase"
           title={club.name}
@@ -42,12 +56,18 @@ export function ClubCard({ club }: ClubCardProps) {
           {club.city}, {club.state}
         </div>
       </CardHeader>
-      <CardContent className="pb-4">
+      <CardContent className="px-6 pb-4">
         {/* Short description logic could go here, but API doesn't always provide a good short one */}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="p-6">
         <Button asChild className="w-full font-bold">
-          <Link href={`/club/${club.id}`}>View Details</Link>
+          {club.source === "NRL_HUNTER" && club.website ? (
+            <a href={club.website} target="_blank" rel="noopener noreferrer">
+              View Match Info
+            </a>
+          ) : (
+            <Link href={`/club/${club.id}`}>View Details</Link>
+          )}
         </Button>
       </CardFooter>
     </Card>

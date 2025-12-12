@@ -1,0 +1,26 @@
+[
+  {
+    "id": 29676,
+    "name": "High Desert Hunter",
+    "startDate": "2026-06-20T00:00:00.000Z",
+    "city": "Vernal",
+    "state": "UT",
+    "matchTypeReadableName": "NRL Hunter",
+    "registrationEnabled": true,
+    "matchEnded": false,
+    "source": "NRL_HUNTER",
+    "url": "https://www.nrlhunter.org/matches/72ed1847-9b50-4e9c-9bfe-c96c42e2a8fd"
+  },
+  {
+    "id": 21380,
+    "name": "Hornady Precision Hunter Challenge",
+    "startDate": "2026-08-15T00:00:00.000Z",
+    "city": "Price",
+    "state": "UT",
+    "matchTypeReadableName": "NRL Hunter",
+    "registrationEnabled": true,
+    "matchEnded": false,
+    "source": "NRL_HUNTER",
+    "url": "https://www.nrlhunter.org/matches/2e0ca80c-d449-45a5-a4e0-425be02dfe68"
+  }
+]

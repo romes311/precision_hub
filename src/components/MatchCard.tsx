@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button"; // Standard Button
 import { CalendarDays, MapPin } from "lucide-react"; // Import Icons
+import { CalendarButton } from "@/components/CalendarButton";
 
 interface MatchCardProps {
   match: Match;
@@ -27,7 +28,8 @@ export function MatchCard({ match }: MatchCardProps) {
 
   // Link logic
   const resultLink = `/match/${match.id}/results`;
-  const registerLink = match.url || `https://www.impactscoring.net/match/register?id=${match.id}`;
+  const registerLink =
+    match.url || `https://www.impactscoring.net/match/register?id=${match.id}`;
 
   const imageUrl =
     match.clubLogoImage?.previewUrl ||
@@ -37,7 +39,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
   return (
     <Card
-      className={`border-border flex h-full flex-col overflow-hidden border transition-all ${isPast ? "opacity-60" : "hover:border-primary hover:shadow-md"} bg-[#1E1E1E]`}
+      className={`border-border flex h-full flex-col gap-0 overflow-hidden border p-0 transition-all ${isPast ? "opacity-60" : "hover:border-primary hover:shadow-md"} bg-[#1E1E1E]`}
     >
       {imageUrl && (
         <div className="bg-muted border-border/50 relative h-32 w-full border-b">
@@ -48,7 +50,7 @@ export function MatchCard({ match }: MatchCardProps) {
           />
         </div>
       )}
-      <CardContent className="flex-1 p-4 pt-5">
+      <CardContent className={`flex-1 p-4 ${imageUrl ? "pt-5" : "pt-4"}`}>
         <div className="mb-2 flex items-start justify-between">
           <div className="flex flex-col">
             <span
@@ -75,17 +77,30 @@ export function MatchCard({ match }: MatchCardProps) {
           {match.city}, {match.state}
         </div>
       </CardContent>
-      <CardFooter className="border-border border-t bg-transparent p-3">
+      <CardFooter className="border-border border-t p-6">
         {isPast ? (
           <Button asChild variant="outline" className="w-full">
             <Link href={resultLink}>View Results</Link>
           </Button>
         ) : (
-          <Button asChild className="w-full font-bold">
-            <Link href={registerLink} target="_blank">
-              Register / Details
-            </Link>
-          </Button>
+          <div className="flex w-full flex-col gap-3 sm:flex-row">
+            <CalendarButton
+              event={{
+                title: match.name,
+                description: `Match: ${match.name}\nType: ${match.matchTypeReadableName}\nClub: ${match.clubName || "N/A"}`,
+                startDate: match.startDate,
+                location: `${match.city}, ${match.state}`,
+                url: registerLink,
+              }}
+              variant="outline"
+              className="flex-1"
+            />
+            <Button asChild className="flex-1 font-bold">
+              <Link href={registerLink} target="_blank">
+                Register
+              </Link>
+            </Button>
+          </div>
         )}
       </CardFooter>
     </Card>

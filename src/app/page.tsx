@@ -1,54 +1,126 @@
-import { getClubs, getMatches } from "@/lib/api";
-import { ClubCard } from "@/components/ClubCard";
+import { getMatches } from "@/lib/api";
 import { MatchList } from "@/components/MatchList";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-interface PageProps {
-  searchParams: Promise<{ source?: string }>;
-}
+export const dynamic = "force-dynamic";
 
-export default async function Home(props: PageProps) {
-  const searchParams = await props.searchParams;
-  const sourceFilter = searchParams.source || "IMPACT"; // Default to IMPACT
-
+export default async function Home() {
   const allMatches = await getMatches();
 
-  // Filter based on source
-  const matches = allMatches.filter(m => m.source === sourceFilter);
-
-  // Filter for upcoming matches only
-  const upcomingMatches = matches
+  // Filter for upcoming only
+  const upcomingMatches = allMatches
     .filter((match) => new Date(match.startDate) >= new Date())
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    .sort(
+      (a, b) =>
+        new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    );
 
-  const getTitle = () => {
-    if (sourceFilter === "PRS") return "PRS Series Matches";
-    return "NRL22 / Impact Matches";
-  }
+  // Split by source
+  const rimfireMatches = upcomingMatches
+    .filter((m) => m.source === "IMPACT")
+    .slice(0, 4);
+  const prsMatches = upcomingMatches
+    .filter((m) => m.source === "PRS")
+    .slice(0, 4);
+  const hunterMatches = upcomingMatches
+    .filter((m) => m.source === "NRL_HUNTER")
+    .slice(0, 4);
+  const gasGunMatches = upcomingMatches
+    .filter((m) => m.source === "GAS_GUN")
+    .slice(0, 4);
 
   return (
     <main className="bg-background min-h-screen pb-20">
-      {/* Hero Section */}
-      <div className="bg-card border-border text-card-foreground border-b py-16">
+      <div className="bg-card border-border text-card-foreground border-b pt-24 pb-16">
         <div className="container mx-auto max-w-6xl px-4">
           <h1 className="text-primary mb-4 text-4xl font-extrabold tracking-tight uppercase md:text-5xl">
             Utah Rifle Shooting Hub
           </h1>
           <p className="text-muted-foreground max-w-2xl text-xl md:text-2xl">
-            Your central source for verified NRL22 and precision rimfire matches across Utah.
+            The central calendar for verified precision rifle matches across
+            Utah.
           </p>
         </div>
       </div>
 
-      <div className="container mx-auto -mt-8 max-w-6xl px-4">
-        {/* Matches Section */}
-        <div className="mb-12">
+      <div className="container mx-auto mt-12 max-w-6xl space-y-12 px-4">
+        {/* Rimfire Section */}
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-wide uppercase">
+              Rimfire Matches
+            </h2>
+            <Button variant="link" asChild className="text-primary">
+              <Link href="/rimfire">
+                View All & Clubs <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
           <MatchList
-            matches={upcomingMatches}
-            title={getTitle()}
-            emptyMessage="No upcoming matches scheduled."
+            matches={rimfireMatches}
+            emptyMessage="No upcoming rimfire matches."
+            layout="list"
           />
-        </div>
+        </section>
+
+        {/* PRS Section */}
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-wide uppercase">
+              PRS Series
+            </h2>
+            <Button variant="link" asChild className="text-primary">
+              <Link href="/prs">
+                View All & Clubs <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+          <MatchList
+            matches={prsMatches}
+            emptyMessage="No upcoming PRS matches."
+            layout="list"
+          />
+        </section>
+
+        {/* NRL Hunter Section */}
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-wide uppercase">
+              NRL Hunter
+            </h2>
+            <Button variant="link" asChild className="text-primary">
+              <Link href="/nrl-hunter">
+                View All & Clubs <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+          <MatchList
+            matches={hunterMatches}
+            emptyMessage="No upcoming NRL Hunter matches."
+            layout="list"
+          />
+        </section>
+
+        {/* Gas Gun Section */}
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-wide uppercase">
+              Gas Gun
+            </h2>
+            <Button variant="link" asChild className="text-primary">
+              <Link href="/gas-gun">
+                View All & Clubs <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+          <MatchList
+            matches={gasGunMatches}
+            emptyMessage="No upcoming Gas Gun matches."
+            layout="list"
+          />
+        </section>
       </div>
     </main>
   );
