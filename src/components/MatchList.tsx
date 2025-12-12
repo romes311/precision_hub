@@ -5,7 +5,7 @@ import { Match } from "@/types";
 import { MatchCard } from "./MatchCard";
 
 import Link from "next/link";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, LayoutGrid, List } from "lucide-react";
@@ -80,7 +80,7 @@ export function MatchList({
       ) : (
         <div className="space-y-4">
           {matches.map((match) => {
-            const date = moment(match.startDate);
+            const date = moment.utc(match.startDate).tz("America/Denver");
             const isPast = date.isBefore(moment());
             const registerLink =
               match.url ||
@@ -138,8 +138,8 @@ export function MatchList({
 
                     <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                       <span className="flex items-center whitespace-nowrap">
-                        <CalendarDays className="mr-1 h-3.5 w-3.5" />
-                        {date.format("dddd, h:mm A")}
+                        <CalendarDays className="w-3.5 h-3.5 mr-1" />
+                        {date.format("h:mm A") === "12:00 AM" ? date.format("dddd") : date.format("dddd, h:mm A")}
                       </span>
                       <span className="flex items-center whitespace-nowrap">
                         <MapPin className="mr-1 h-3.5 w-3.5" />
@@ -165,9 +165,8 @@ export function MatchList({
                       <CalendarButton
                         event={{
                           title: match.name,
-                          description: `Match: ${match.name}\nType: ${match.matchTypeReadableName}\nClub: ${
-                            match.clubName || "N/A"
-                          }`,
+                          description: `Match: ${match.name}\nType: ${match.matchTypeReadableName}\nClub: ${match.clubName || "N/A"
+                            }`,
                           startDate: match.startDate,
                           location: `${match.city}, ${match.state}`,
                           url: registerLink,

@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 
 interface CalendarEvent {
   title: string;
@@ -10,8 +10,11 @@ interface CalendarEvent {
 }
 
 export function getGoogleCalendarUrl(event: CalendarEvent): string {
-  const start = moment(event.startDate).format("YYYYMMDDTHHmmss");
-  const end = moment(event.startDate)
+  // Assume event is in Utah (Mountain Time)
+  const tz = "America/Denver";
+  const start = moment.utc(event.startDate).tz(tz).format("YYYYMMDDTHHmmss");
+  const end = moment.utc(event.startDate)
+    .tz(tz)
     .add(event.durationHours || 4, "hours")
     .format("YYYYMMDDTHHmmss");
 
@@ -23,16 +26,19 @@ export function getGoogleCalendarUrl(event: CalendarEvent): string {
     dates: `${start}/${end}`,
     details: details,
     location: event.location,
+    ctz: tz,
   });
 
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
 export function getOutlookCalendarUrl(event: CalendarEvent): string {
-  const start = moment(event.startDate).format("YYYY-MM-DDTHH:mm:ss");
-  const end = moment(event.startDate)
+  // Outlook usually expects ISO strings. If we send UTC, it's safer.
+  // 15:30 UTC = 8:30 AM MST.
+  const start = moment.utc(event.startDate).format("YYYY-MM-DDTHH:mm:ss[Z]");
+  const end = moment.utc(event.startDate)
     .add(event.durationHours || 4, "hours")
-    .format("YYYY-MM-DDTHH:mm:ss");
+    .format("YYYY-MM-DDTHH:mm:ss[Z]");
 
   const details = `${event.description}${event.url ? `\n\nMore info: ${event.url}` : ""}`;
 
@@ -50,12 +56,12 @@ export function getOutlookCalendarUrl(event: CalendarEvent): string {
 }
 
 export function getYahooCalendarUrl(event: CalendarEvent): string {
-  const start = moment(event.startDate).format("YYYYMMDDTHHmmss");
-  const end = moment(event.startDate)
+  // Yahoo is a bit tricky with timezones, sends Z is usually best.
+  const start = moment.utc(event.startDate).format("YYYYMMDDTHHmmss[Z]");
+  const end = moment.utc(event.startDate)
     .add(event.durationHours || 4, "hours")
-    .format("YYYYMMDDTHHmmss");
+    .format("YYYYMMDDTHHmmss[Z]");
 
-  // Yahoo specific description length limits sometimes apply, but we try standard
   const details = `${event.description}${event.url ? `\n\nMore info: ${event.url}` : ""}`;
 
   const params = new URLSearchParams({
@@ -63,8 +69,6 @@ export function getYahooCalendarUrl(event: CalendarEvent): string {
     title: event.title,
     st: start,
     dur: "0400",
-    // Yahoo mostly supports 'et' or 'dur'.
-    // Let's stick to 'et' (end time)
     et: end,
     desc: details,
     in_loc: event.location,
@@ -74,19 +78,14 @@ export function getYahooCalendarUrl(event: CalendarEvent): string {
 }
 
 export function getIcsFileContent(event: CalendarEvent): string {
-  // For ICS, it is safer to use UTC if possible to avoid client confusion,
-  // BUT to be consistent with the "floating" fix above, we might want local time without TZ.
-  // However, ICS floating time is just YYYYMMDDTHHmmss without 'Z'.
-
-  const start = moment(event.startDate).format("YYYYMMDDTHHmmss");
-  const end = moment(event.startDate)
+  // Use UTC times for ICS so it's unambiguous
+  const start = moment.utc(event.startDate).format("YYYYMMDDTHHmmss[Z]");
+  const end = moment.utc(event.startDate)
     .add(event.durationHours || 4, "hours")
-    .format("YYYYMMDDTHHmmss");
+    .format("YYYYMMDDTHHmmss[Z]");
 
-  const now = moment().utc().format("YYYYMMDDTHHmmss[Z]"); // DTSTAMP should be UTC
+  const now = moment().utc().format("YYYYMMDDTHHmmss[Z]");
   const details = `${event.description}${event.url ? `\\n\\nMore info: ${event.url}` : ""}`;
-
-  // Clean newlines for ICS
   const cleanDescription = details.replace(/\n/g, "\\n");
 
   return `BEGIN:VCALENDAR

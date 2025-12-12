@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Match } from "@/types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ export function MatchCard({ match }: MatchCardProps) {
   const [formattedDate, setFormattedDate] = useState("");
 
   useEffect(() => {
-    const date = moment(match.startDate);
+    const date = moment.utc(match.startDate).tz("America/Denver");
     setIsPast(date.isBefore(moment()));
     setFormattedDate(date.format("MMM D, YYYY"));
     setIsMounted(true);
@@ -68,10 +68,12 @@ export function MatchCard({ match }: MatchCardProps) {
           </Badge>
         </div>
 
-        <div className="text-muted-foreground mb-1 flex items-center text-sm">
-          <CalendarDays className="mr-2 h-4 w-4" />
-          {isMounted ? moment(match.startDate).format("h:mm A") : "--:--"}
-        </div>
+        {isMounted && moment.utc(match.startDate).tz("America/Denver").format("h:mm A") !== "12:00 AM" && (
+          <div className="text-muted-foreground mb-1 flex items-center text-sm">
+            <CalendarDays className="mr-2 h-4 w-4" />
+            {moment.utc(match.startDate).tz("America/Denver").format("h:mm A")}
+          </div>
+        )}
         <div className="text-muted-foreground flex items-center text-sm">
           <MapPin className="mr-2 h-4 w-4" />
           {match.city}, {match.state}
