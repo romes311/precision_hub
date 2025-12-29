@@ -68,12 +68,17 @@ export function MatchCard({ match }: MatchCardProps) {
           </Badge>
         </div>
 
-        {isMounted && moment.utc(match.startDate).tz("America/Denver").format("h:mm A") !== "12:00 AM" && (
-          <div className="text-muted-foreground mb-1 flex items-center text-sm">
-            <CalendarDays className="mr-2 h-4 w-4" />
-            {moment.utc(match.startDate).tz("America/Denver").format("h:mm A")}
-          </div>
-        )}
+        {isMounted &&
+          moment.utc(match.startDate).tz("America/Denver").format("h:mm A") !==
+            "12:00 AM" && (
+            <div className="text-muted-foreground mb-1 flex items-center text-sm">
+              <CalendarDays className="mr-2 h-4 w-4" />
+              {moment
+                .utc(match.startDate)
+                .tz("America/Denver")
+                .format("h:mm A")}
+            </div>
+          )}
         <div className="text-muted-foreground flex items-center text-sm">
           <MapPin className="mr-2 h-4 w-4" />
           {match.city}, {match.state}

@@ -83,6 +83,7 @@
       "codesEnabled": false,
       "codesStartDate": null,
       "codesEndDate": null,
+      "discountCodesEnabled": false,
       "registrationEnabled": true,
       "timePlus": false,
       "timePenalty1Name": null,
@@ -5705,8 +5706,8 @@
           "audioSamples": null,
           "fileType": "IMAGE"
         },
-        "city": null,
-        "state": null,
+        "city": "Choteau",
+        "state": "Montana",
         "email": "gebhardt243@gmail.com",
         "firstName": "Nicholas",
         "lastName": "Gebhardt",

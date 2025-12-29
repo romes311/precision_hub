@@ -26,10 +26,10 @@ export default async function PrsPage() {
       <div className="bg-card border-border text-card-foreground border-b py-16">
         <div className="container mx-auto max-w-6xl px-4">
           <h1 className="text-primary mb-4 text-4xl font-extrabold tracking-tight uppercase md:text-5xl">
-            PRS Series
+            Centerfire PRS
           </h1>
           <p className="text-muted-foreground max-w-2xl text-xl md:text-2xl">
-            Official Precision Rifle Series events in Utah.
+            Official Centerfire Precision Rifle Series events in Utah.
           </p>
         </div>
       </div>
@@ -39,8 +39,8 @@ export default async function PrsPage() {
         <div className="mb-12">
           <MatchList
             matches={upcomingMatches}
-            title="PRS Series Matches"
-            emptyMessage="No upcoming PRS matches scheduled."
+            title="Centerfire PRS Matches"
+            emptyMessage="No upcoming Centerfire PRS matches scheduled."
           />
         </div>
 

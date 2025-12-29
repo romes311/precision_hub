@@ -107,7 +107,7 @@
     "matchTypeReadableName": "PRS Rimfire",
     "clubId": 264,
     "registrationEnabled": true,
-    "matchEnded": false,
+    "matchEnded": true,
     "source": "PRS",
     "url": "https://www.precisionrifleseries.com/m/8132/price-ball-busters-december-match/"
   },

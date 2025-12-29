@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 export default async function RimfirePage() {
   const allMatches = await getMatches();
 
-  // Filter for Impact matches only
-  const matches = allMatches.filter((m) => m.source === "IMPACT");
+  // Filter for Rimfire matches only
+  const matches = allMatches.filter((m) => m.source === "RIMFIRE");
 
   const upcomingMatches = matches
     .filter((match) => new Date(match.startDate) >= new Date())
@@ -19,7 +19,7 @@ export default async function RimfirePage() {
 
   // Get Clubs
   const allClubs = await getClubs();
-  const clubs = allClubs.filter((c) => c.source === "IMPACT");
+  const clubs = allClubs.filter((c) => c.source === "RIMFIRE");
 
   return (
     <main className="bg-background min-h-screen pb-20">

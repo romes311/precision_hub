@@ -19,7 +19,7 @@ export default async function Home() {
 
   // Split by source
   const rimfireMatches = upcomingMatches
-    .filter((m) => m.source === "IMPACT")
+    .filter((m) => m.source === "RIMFIRE")
     .slice(0, 4);
   const prsMatches = upcomingMatches
     .filter((m) => m.source === "PRS")
@@ -33,7 +33,7 @@ export default async function Home() {
 
   return (
     <main className="bg-background min-h-screen pb-20">
-      <div className="relative border-b pt-32 pb-24 border-border overflow-hidden">
+      <div className="border-border relative overflow-hidden border-b pt-32 pb-24">
         {/* Background Image */}
         <div
           className="absolute inset-0 z-0 bg-cover bg-center"
@@ -43,11 +43,11 @@ export default async function Home() {
           <div className="absolute inset-0 bg-black/70" />
         </div>
 
-        <div className="container relative z-10 mx-auto max-w-6xl px-4">
-          <h1 className="text-white mb-4 text-4xl font-extrabold tracking-tight uppercase md:text-6xl drop-shadow-md">
+        <div className="relative z-10 container mx-auto max-w-6xl px-4">
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white uppercase drop-shadow-md md:text-6xl">
             Utah Rifle Shooting Hub
           </h1>
-          <p className="text-gray-200 max-w-2xl text-xl md:text-2xl drop-shadow-sm font-medium">
+          <p className="max-w-2xl text-xl font-medium text-gray-200 drop-shadow-sm md:text-2xl">
             The central calendar for verified precision rifle matches across
             Utah.
           </p>
@@ -78,7 +78,7 @@ export default async function Home() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-wide uppercase">
-              PRS Series
+              Centerfire PRS
             </h2>
             <Button variant="link" asChild className="text-primary">
               <Link href="/prs">

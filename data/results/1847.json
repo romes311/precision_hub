@@ -83,6 +83,7 @@
       "codesEnabled": false,
       "codesStartDate": null,
       "codesEndDate": null,
+      "discountCodesEnabled": false,
       "registrationEnabled": true,
       "timePlus": false,
       "timePenalty1Name": null,

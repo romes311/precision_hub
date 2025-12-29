@@ -38,7 +38,7 @@ export function GlobalNav() {
                 "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
-            <Link href="/prs">PRS Series</Link>
+            <Link href="/prs">Centerfire PRS</Link>
           </Button>
           <Button
             asChild

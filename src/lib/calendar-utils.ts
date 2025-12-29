@@ -13,7 +13,8 @@ export function getGoogleCalendarUrl(event: CalendarEvent): string {
   // Assume event is in Utah (Mountain Time)
   const tz = "America/Denver";
   const start = moment.utc(event.startDate).tz(tz).format("YYYYMMDDTHHmmss");
-  const end = moment.utc(event.startDate)
+  const end = moment
+    .utc(event.startDate)
     .tz(tz)
     .add(event.durationHours || 4, "hours")
     .format("YYYYMMDDTHHmmss");
@@ -36,7 +37,8 @@ export function getOutlookCalendarUrl(event: CalendarEvent): string {
   // Outlook usually expects ISO strings. If we send UTC, it's safer.
   // 15:30 UTC = 8:30 AM MST.
   const start = moment.utc(event.startDate).format("YYYY-MM-DDTHH:mm:ss[Z]");
-  const end = moment.utc(event.startDate)
+  const end = moment
+    .utc(event.startDate)
     .add(event.durationHours || 4, "hours")
     .format("YYYY-MM-DDTHH:mm:ss[Z]");
 
@@ -58,7 +60,8 @@ export function getOutlookCalendarUrl(event: CalendarEvent): string {
 export function getYahooCalendarUrl(event: CalendarEvent): string {
   // Yahoo is a bit tricky with timezones, sends Z is usually best.
   const start = moment.utc(event.startDate).format("YYYYMMDDTHHmmss[Z]");
-  const end = moment.utc(event.startDate)
+  const end = moment
+    .utc(event.startDate)
     .add(event.durationHours || 4, "hours")
     .format("YYYYMMDDTHHmmss[Z]");
 
@@ -80,7 +83,8 @@ export function getYahooCalendarUrl(event: CalendarEvent): string {
 export function getIcsFileContent(event: CalendarEvent): string {
   // Use UTC times for ICS so it's unambiguous
   const start = moment.utc(event.startDate).format("YYYYMMDDTHHmmss[Z]");
-  const end = moment.utc(event.startDate)
+  const end = moment
+    .utc(event.startDate)
     .add(event.durationHours || 4, "hours")
     .format("YYYYMMDDTHHmmss[Z]");
 

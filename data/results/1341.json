@@ -83,6 +83,7 @@
       "codesEnabled": false,
       "codesStartDate": null,
       "codesEndDate": null,
+      "discountCodesEnabled": false,
       "registrationEnabled": true,
       "timePlus": false,
       "timePenalty1Name": null,
@@ -291,7 +292,7 @@
       {
         "id": 810,
         "name": "Carlos Bacha",
-        "handleName": "Carlos",
+        "handleName": "fshizl",
         "profileImage": {
           "identityId": 810,
           "fileId": "1729391274904-j1y1uvibdqiyknpq.jpg",

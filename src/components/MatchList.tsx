@@ -138,8 +138,10 @@ export function MatchList({
 
                     <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                       <span className="flex items-center whitespace-nowrap">
-                        <CalendarDays className="w-3.5 h-3.5 mr-1" />
-                        {date.format("h:mm A") === "12:00 AM" ? date.format("dddd") : date.format("dddd, h:mm A")}
+                        <CalendarDays className="mr-1 h-3.5 w-3.5" />
+                        {date.format("h:mm A") === "12:00 AM"
+                          ? date.format("dddd")
+                          : date.format("dddd, h:mm A")}
                       </span>
                       <span className="flex items-center whitespace-nowrap">
                         <MapPin className="mr-1 h-3.5 w-3.5" />
@@ -165,8 +167,9 @@ export function MatchList({
                       <CalendarButton
                         event={{
                           title: match.name,
-                          description: `Match: ${match.name}\nType: ${match.matchTypeReadableName}\nClub: ${match.clubName || "N/A"
-                            }`,
+                          description: `Match: ${match.name}\nType: ${match.matchTypeReadableName}\nClub: ${
+                            match.clubName || "N/A"
+                          }`,
                           startDate: match.startDate,
                           location: `${match.city}, ${match.state}`,
                           url: registerLink,
