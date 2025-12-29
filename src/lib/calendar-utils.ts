@@ -108,14 +108,34 @@ END:VEVENT
 END:VCALENDAR`;
 }
 
+export function getIcsApiUrl(event: CalendarEvent): string {
+  const params = new URLSearchParams({
+    title: event.title,
+    startDate: event.startDate,
+    description: event.description,
+    location: event.location,
+    url: event.url || "",
+  });
+
+  return `/api/calendar?${params.toString()}`;
+}
+
 export function downloadIcsFile(event: CalendarEvent) {
-  const content = getIcsFileContent(event);
-  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
-  const href = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = href;
-  link.setAttribute("download", `${event.title.replace(/\s+/g, "_")}.ics`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const apiUrl = getIcsApiUrl(event);
+
+  // On iOS, using the webcal:// protocol can be more reliable for triggering 
+  // the "Add to Calendar" prompt for .ics files served via API.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  if (isIOS) {
+    // Construct an absolute URL and swap https for webcal
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    const fullUrl = `${protocol}//${host}${apiUrl}`;
+    const webcalUrl = fullUrl.replace(/^https?:/, "webcal:");
+    window.location.href = webcalUrl;
+  } else {
+    window.location.href = apiUrl;
+  }
 }
