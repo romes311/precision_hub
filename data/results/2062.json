@@ -108,7 +108,7 @@
       "registeredForMatch": null,
       "matchStarted": false,
       "matchEnded": false,
-      "registrationStarted": false,
+      "registrationStarted": true,
       "registrationEnded": false,
       "registrationWithCodesStarted": false,
       "registrationWithCodesEnded": false,
