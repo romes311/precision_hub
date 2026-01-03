@@ -93,7 +93,7 @@
     "matchTypeReadableName": "PRS Rimfire",
     "clubId": 264,
     "registrationEnabled": true,
-    "matchEnded": false,
+    "matchEnded": true,
     "source": "PRS",
     "url": "https://www.precisionrifleseries.com/m/8123/eastons-bang-and-clang/"
   },
